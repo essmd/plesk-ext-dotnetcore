@@ -21,12 +21,15 @@ class IndexController extends pm_Controller_Action
      * indexAction
      */
     public function indexAction() {
-        $paths = [
+
+        // DEBUG: Paths
+        $this->view->paths = [
             'home'    => $this->domain->getHomePath(),
             'docroot' => $this->domain->getDocumentRoot(),
             'vhost'   => $this->domain->getVhostSystemPath()
         ];
 
+        // DEBUG: Test Service File Content Generation
         $service = new Modules_Dotnetcore_Settings_Service([
             'name' => 'app-name-from-settings',
             'entryPoint' => 'EntryPointFromSettings.dll',
@@ -36,13 +39,24 @@ class IndexController extends pm_Controller_Action
 
         $serviceUser = $this->domain->getSysUserLogin();
         $serviceFileContent = $service->generateServiceFileContent($serviceUser);
-
-        $settingsForm = new Modules_Dotnetcore_Settings_Form();
-
-        $this->view->paths = $paths;
+        
         $this->view->serviceFileContent = $serviceFileContent;
 
-        $this->view->form = $settingsForm;
+
+        // create settings form and handle POST request
+        $form = new Modules_Dotnetcore_Settings_Form();
+        $request = $this->getRequest();
+
+        if ($request->isPost() && $form->isValid($request->getPost())) {
+            // pm_Settings::set('TODO', 'TODO');
+            
+            $this->_status->addMessage('info', 'Successfully saved');
+            $this->_helper->json([
+                'redirect' => pm_Context::getBaseUrl()
+            ]);
+        }
+
+        $this->view->form = $form;
         $this->view->tabs = Modules_Dotnetcore_Common_TabsHelper::getDomainTabs();
         $this->view->pageTitle = pm_Locale::lmsg('pageDomainTitle', [
             'domain' => $this->domain->getName()
