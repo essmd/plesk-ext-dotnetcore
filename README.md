@@ -32,15 +32,15 @@ I am focused on a version, that runs with Plesk Onyx installed on Debian and i a
 
 ## Installation
 
-While the extension is not completed yet, it must be installed manually:
+While the extension is not completed yet, it must be installed manually. There are two options to install the extension:
 
-### Upload an archive
+### Option 1: Upload an archive
 
 1. Download or clone the repository
 2. Create a *.zip file of all files in the repository (excluding the GIT folder .git/*)
 3. Install the extension in the Plesk Administration under Extension by uploading the zip file
 
-### Upload extension files
+### Option 2: Upload extension files
 
 If your plesk installation is located at ```/opt/psa``` you have to upload the following files to the following folders:
 
