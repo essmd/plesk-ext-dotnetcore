@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <id>dotnetcore</id>
+  <name>.NET Core</name>
+  <category>webserver</category>
+  <description>Easier and simpler hosting of .NET Core applications in Plesk Onyx.</description>
+  <version>1.0</version>
+  <release>1</release>
+  <vendor>Dominik Essmann</vendor>
+  <plesk_min_version>17.8.11</plesk_min_version>
+</module>
