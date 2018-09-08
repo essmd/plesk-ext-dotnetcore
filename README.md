@@ -12,6 +12,24 @@ Since i work on this extension for me and just for fun, i don't garantee for any
 
 I am focused on a version, that runs with Plesk Onyx installed on Debian and i am happy and open for every contribution and help on this project. So if you are interested and motivated to work on this project, add support for other linux version etc. - dont hestitate to open a pull request, you and the pull requests are welcome!
 
+## Todos
+
+[X] Basic extension and code setup
+
+[ ] Form validation for .NET Core App settings (name, entry point, environment, ...)
+
+[ ] Service status info using systemd (Tool button in the "General" tab)
+
+[ ] Manual Service restart using systemd (Tool button in the "General" tab)
+
+[ ] Persist form values (settings) under the "General" tab using [pm_Settings](https://plesk.github.io/pm-api-stubs/docs/classes/pm_Settings.html)
+
+[ ] Add support for systemd / services by writing/overwriting service files under ```/etc/systemd/system``` (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#create-the-service-file))
+
+[ ] Add support for reading the last log entries from the application using journalctrl (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#viewing-logs))
+
+
+
 ## Installation
 
 While the extension is not completed yet, it must be installed manually:
