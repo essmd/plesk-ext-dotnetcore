@@ -14,19 +14,19 @@ I am focused on a version, that runs with Plesk Onyx installed on Debian and i a
 
 ## Todos
 
-[X] Basic extension and code setup
+- [X] Basic extension and code setup
 
-[ ] Form validation for .NET Core App settings (name, entry point, environment, ...)
+- [ ] Form validation for .NET Core App settings (name, entry point, environment, ...)
 
-[ ] Service status info using systemd (Tool button in the "General" tab)
+- [ ] Service status info using systemd (Tool button in the "General" tab)
 
-[ ] Manual Service restart using systemd (Tool button in the "General" tab)
+- [ ] Manual Service restart using systemd (Tool button in the "General" tab)
 
-[ ] Persist form values (settings) under the "General" tab using [pm_Settings](https://plesk.github.io/pm-api-stubs/docs/classes/pm_Settings.html)
+- [ ] Persist form values (settings) under the "General" tab using [pm_Settings](https://plesk.github.io/pm-api-stubs/docs/classes/pm_Settings.html)
 
-[ ] Add support for systemd / services by writing/overwriting service files under ```/etc/systemd/system``` (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#create-the-service-file))
+- [ ] Add support for systemd / services by writing/overwriting service files under ```/etc/systemd/system``` (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#create-the-service-file))
 
-[ ] Add support for reading the last log entries from the application using journalctrl (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#viewing-logs))
+- [ ] Add support for reading the last log entries from the application using journalctrl (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#viewing-logs))
 
 
 
