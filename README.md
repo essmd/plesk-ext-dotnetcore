@@ -16,7 +16,7 @@ I am focused on a version, that runs with Plesk Onyx installed on Debian and i a
 
 - [X] Basic extension and code setup
 
-- [ ] Form validation for .NET Core App settings (name, entry point, environment, ...)
+- [X] Form validation for .NET Core App settings (name, entry point, environment, ...)
 
 - [ ] Service status info using systemd (Tool button in the "General" tab)
 

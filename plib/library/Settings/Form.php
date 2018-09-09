@@ -2,31 +2,32 @@
 
 class Modules_Dotnetcore_Settings_Form extends pm_Form_Simple
 {
-    const ELEMENT_ENVIRONMENT = 'environment';
-    const ELEMENT_ENTRY_POINT = 'entrypoint';
+    const ELEMENT_SERVICE_NAME  = 'name';
+    const ELEMENT_ENVIRONMENT   = 'environment';
+    const ELEMENT_ENTRY_POINT   = 'entryPoint';
 
-    public function __construct() {
+    public function __construct(Modules_Dotnetcore_Settings_Service $service = null) {
         parent::__construct();
-        
+
         // application entry point
         $this->addElement('text', self::ELEMENT_ENTRY_POINT, [
             'label'    => pm_Locale::lmsg('formSettingsEntryPointInputLabel'),
             'required' => true,
-            'value'    => null
+            'value'    => $service ? $service->getEntryPoint() : null
         ]);
 
         // application environment
         $this->addElement('text', self::ELEMENT_ENVIRONMENT, [
             'label'    => pm_Locale::lmsg('formSettingsEnvironmentInputLabel'),
             'required' => true,
-            'value'    => null
+            'value'    => $service ? $service->getEnvironment() : null
         ]);
 
         // system service name
-        $this->addElement('text', 'servicename', [
+        $this->addElement('text', self::ELEMENT_SERVICE_NAME, [
             'label'    => pm_Locale::lmsg('formSettingsServiceNameInputLabel'),
             'required' => true,
-            'value'    => null
+            'value'    => $service ? $service->getName() : null
         ]);
 
         $this->addControlButtons([
@@ -63,6 +64,17 @@ class Modules_Dotnetcore_Settings_Form extends pm_Form_Simple
 
         if ($environmentElementValue && !in_array($environmentElementValue, $environmentSupportedValues)) {
             $environmentElement->addError('Unsupported environment. Supported values are: ' . implode(', ', $environmentSupportedValues));
+            $result = false;
+            
+            $this->markAsError();
+        }
+
+        // Service Name
+        $serviceNameElement = $this->getElement(self::ELEMENT_SERVICE_NAME);
+        $serviceNameElementValue = $serviceNameElement->getValue();
+
+        if ($serviceNameElementValue && !preg_match('/^([a-z0-9-]+)$/i', $serviceNameElementValue)) {
+            $entryPointElement->addError('Invalid service name. Only a-Z, 0-9 and - are allowed');
             $result = false;
             
             $this->markAsError();

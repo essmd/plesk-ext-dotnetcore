@@ -22,44 +22,63 @@ class IndexController extends pm_Controller_Action
      */
     public function indexAction() {
 
-        // DEBUG: Paths
-        $this->view->paths = [
-            'home'    => $this->domain->getHomePath(),
-            'docroot' => $this->domain->getDocumentRoot(),
-            'vhost'   => $this->domain->getVhostSystemPath()
-        ];
-
         // DEBUG: Test Service File Content Generation
-        $service = new Modules_Dotnetcore_Settings_Service([
-            'name' => 'app-name-from-settings',
-            'entryPoint' => 'EntryPointFromSettings.dll',
-            'environment' => 'production',
-            'workingDirectory' => $this->domain->getDocumentRoot()
-        ]);
-
-        $serviceUser = $this->domain->getSysUserLogin();
-        $serviceFileContent = $service->generateServiceFileContent($serviceUser);
+        $service = Modules_Dotnetcore_Settings_Storage::restore($this->domain);
+        $serviceFileName = Modules_Dotnetcore_Services_File::createServiceFileName($this->domain);
+        $serviceFileContent = Modules_Dotnetcore_Services_File::createServiceFileContent($service);
         
+        $this->view->serviceFileName = $serviceFileName;
         $this->view->serviceFileContent = $serviceFileContent;
 
-
         // create settings form and handle POST request
-        $form = new Modules_Dotnetcore_Settings_Form();
+        $form = new Modules_Dotnetcore_Settings_Form($service);
         $request = $this->getRequest();
 
         if ($request->isPost() && $form->isValid($request->getPost())) {
-            // pm_Settings::set('TODO', 'TODO');
+
+            // persist service configuration
+            $serviceOptions = $form->getValues();
+            $serviceOptions['user'] = $this->domain->getSysUserLogin();
+            $serviceOptions['workingDirectory'] = $this->domain->getDocumentRoot();
+
+            $service = new Modules_Dotnetcore_Settings_Service($serviceOptions);
+            Modules_Dotnetcore_Settings_Storage::persist($this->domain, $service);
+
+            // persist service file
+            if ($service->isValid()) {
+                Modules_Dotnetcore_Services_File::create($this->domain, $service);
+                Modules_Dotnetcore_Services_File::register($this->domain);
+            }
             
-            $this->_status->addMessage('info', 'Successfully saved');
+            $this->_status->addInfo('Successfully saved');
             $this->_helper->json([
                 'redirect' => pm_Context::getBaseUrl()
             ]);
         }
 
         $this->view->form = $form;
+        $this->view->tools = $this->_getTools();
         $this->view->tabs = Modules_Dotnetcore_Common_TabsHelper::getDomainTabs();
         $this->view->pageTitle = pm_Locale::lmsg('pageDomainTitle', [
             'domain' => $this->domain->getName()
         ]);
+    }
+
+    public function restartAction() {
+
+        // TODO: implement
+        $this->_status->addInfo('Service restarted successfully');
+        $this->_helper->redirector('index');
+    }
+
+    private function _getTools() {
+        return [
+            [
+                'title' => 'Restart',
+                'description' => 'Restart the service',
+                'class' => 'sb-refresh',
+                'action' => 'restart'
+            ]
+        ];
     }
 }

@@ -1,16 +1,9 @@
 <?php echo $this->renderTabs($this->tabs) ?>
+<?php echo $this->renderSmallTools($this->tools) ?>
 
 <?php echo $this->form ?>
 
-<?php foreach ($this->paths as $name => $value): ?>
-    <p>
-        <strong><?php echo $name ?></strong> 
-        &mdash; 
-        <?php echo $value; ?>
-    </p>
-<?php endforeach; ?>
-
-
-<pre>
-<?php echo $this->serviceFileContent ?>
-</pre>
+<?php if(!empty($this->serviceFileContent)): ?>
+    <strong>Service File Content (<?php echo $this->serviceFileName ?>)</strong>
+    <pre><?php echo $this->serviceFileContent ?></pre>
+<?php endif ?>

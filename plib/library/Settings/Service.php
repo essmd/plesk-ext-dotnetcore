@@ -3,19 +3,25 @@
 class Modules_Dotnetcore_Settings_Service
 {
     private $_name;
+    private $_user;
     private $_entryPoint;
     private $_workingDirectory;
     private $_environment;
 
     public function __construct(array $options) {
-        $this->_name = $options['name'];
-        $this->_entryPoint = $options['entryPoint'];
-        $this->_environment = $options['environment'];
-        $this->_workingDirectory = $options['workingDirectory'];
+        $this->_name = isset($options['name']) ? $options['name'] : null;
+        $this->_user = isset($options['user']) ? $options['user'] : null;
+        $this->_entryPoint = isset($options['entryPoint']) ? $options['entryPoint'] : null;
+        $this->_environment = isset($options['environment']) ? $options['environment'] : null;
+        $this->_workingDirectory = isset($options['workingDirectory']) ? $options['workingDirectory'] : null;
     }
 
     public function getName() {
         return $this->_name;
+    }
+
+    public function getUser() {
+        return $this->_user;
     }
 
     public function getEntryPoint() {
@@ -30,43 +36,13 @@ class Modules_Dotnetcore_Settings_Service
         return $this->_environment;
     }
 
-    public function generateServiceFileContent($user) {
-        
-        // unit
-        $unit = $this->_generateServiceFileSectionContent('Unit', [
-            'Description' => 'The .NET Core App ' . $this->_name
-        ]);
+    public function isValid() {
+        if (empty($this->_name)) { return false; }
+        if (empty($this->_user)) { return false; }
+        if (empty($this->_entryPoint)) { return false; }
+        if (empty($this->_environment)) { return false; }
+        if (empty($this->_workingDirectory)) { return false; }
 
-        // service
-        $runtimePath = '/usr/bin/dotnet';
-        $serviceEnvironment = 'ASPNETCORE_ENVIRONMENT=' . $this->_environment;
-        $serviceWorkingDirectory = $this->_workingDirectory;
-        $serviceExecStart = $runtimePath . ' ' . $serviceWorkingDirectory . DIRECTORY_SEPARATOR . $this->_entryPoint;
-        $service = $this->_generateServiceFileSectionContent('Service', [
-            'WorkingDirectory' => $serviceWorkingDirectory,
-            'ExecStart' =>  $serviceExecStart,
-            'Restart' => 'always',
-            'RestartSec' => 10,
-            'SyslogIdentifier' => $this->_name,
-            'User' => $user,
-            'Environment' => $serviceEnvironment
-        ]);
-
-        // install
-        $install = $this->_generateServiceFileSectionContent('Install', [
-            'WantedBy' => 'multi-user.target'
-        ]);
-
-        return implode(PHP_EOL . PHP_EOL, [ $unit, $service, $install ]);
-    }
-
-    public function _generateServiceFileSectionContent($section, $data) {
-        $lines = [];
-        foreach ($data as $key => $value) {
-            $lines[] = $key . '=' . $value;
-        }
-        
-        $content = implode(PHP_EOL, $lines);
-        return '[' . $section . ']' . PHP_EOL . $content;
+        return true;
     }
 }

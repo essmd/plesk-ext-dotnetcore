@@ -1,6 +1,6 @@
 <?php
 
-class Modules_DotNetCore_CustomButtons extends pm_Hook_CustomButtons
+class Modules_Dotnetcore_CustomButtons extends pm_Hook_CustomButtons
 {
     public function getButtons() {
         return [
