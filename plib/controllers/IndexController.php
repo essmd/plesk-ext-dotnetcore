@@ -14,7 +14,9 @@ class IndexController extends pm_Controller_Action
      */
     public function init() {
         parent::init();
-        $this->domain = pm_Session::getCurrentDomain();
+
+        $domainId = $this->getRequest()->getParam('site_id');
+        $this->domain = pm_Domain::getByDomainId($domainId);
     }
 
     /**
