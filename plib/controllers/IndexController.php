@@ -29,8 +29,13 @@ class IndexController extends pm_Controller_Action
         $serviceFileName = Modules_Dotnetcore_Services_File::createServiceFileName($this->domain);
         $serviceFileContent = Modules_Dotnetcore_Services_File::createServiceFileContent($service);
         
+        $this->view->serviceUser = $service->getUser();
+        $this->view->serviceActive = $service->isValid();
         $this->view->serviceFileName = $serviceFileName;
         $this->view->serviceFileContent = $serviceFileContent;
+        $this->view->serviceWorkingDirectory = $service->getWorkingDirectory();
+
+        $this->view->serviceFileName = pm_Context::getActionUrl('log', 'index', [ 'params' => [ 'dom_id' => 17 ] ]);
 
         // create settings form and handle POST request
         $form = new Modules_Dotnetcore_Settings_Form($service);
@@ -60,7 +65,7 @@ class IndexController extends pm_Controller_Action
 
         $this->view->form = $form;
         $this->view->tools = $this->_getTools();
-        $this->view->tabs = Modules_Dotnetcore_Common_TabsHelper::getDomainTabs();
+        $this->view->tabs = Modules_Dotnetcore_Common_TabsHelper::getDomainTabs($this->domain);
         $this->view->pageTitle = pm_Locale::lmsg('pageDomainTitle', [
             'domain' => $this->domain->getName()
         ]);

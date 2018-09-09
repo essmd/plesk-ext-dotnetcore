@@ -35,4 +35,84 @@ class Modules_Dotnetcore_Logs_Helper
 
         return [ $entry ];
     }
+
+    public static function getLogsForService($serviceName, $count = 15) {
+        $args = [ $serviceName, $count ];
+        $result = pm_ApiCli::callSbin('read-service-log', $args, pm_ApiCli::RESULT_STDOUT);
+
+        return $result;
+    }
+
+    public static function getLogEntriesForService($serviceName, $count = 15) {
+        $json = self::getLogsForService($serviceName, $count);
+        $entries = self::_createLogEntriesFromJsonLog($json);
+
+        return $entries;
+    }
+
+    private static function _createLogEntriesFromJsonLog($jsonLines) {
+        if (empty($jsonLines)) {
+            return [];
+        }
+
+        $entries = [];
+        $lines = explode(PHP_EOL, trim($jsonLines));
+
+        foreach ($lines as $line) {
+            $line = json_decode($line, true);
+            if (!$line) {
+                continue;
+            }
+
+            $priority = $line['PRIORITY'];
+            $priority = self::_normalizeLogPriority($priority);
+
+            $message = $line['MESSAGE'];
+            $message = self::_normalizeLogMessage($message);
+
+            $entry = new stdClass();
+            $entry->timestamp = $line['__REALTIME_TIMESTAMP'] / 1000000;
+            $entry->type = $priority;
+            $entry->message = $message;
+
+            $entries[] = $entry;
+        }
+
+        return $entries;
+    }
+
+    private static function _normalizeLogPriority($priority) {
+        if (!is_numeric($priority)) {
+            return (string)$priority;
+        }
+
+        switch ((int)$priority) {
+            case 1: return 'alert';
+            case 2: return 'critical';
+            case 3: return 'error';
+            case 4: return 'warning';
+            case 5: return 'notice';
+            case 6: return 'info';
+            case 7: return 'debug';
+        }
+
+        return (string)$priority;
+    }
+
+    private static function _normalizeLogMessage($message) {
+        if (is_array($message)) {
+            $messageAsUnicodeChars = $message;
+            $message = '';
+
+            foreach ($messageAsUnicodeChars as $char) {
+                $message = $message . chr((int)$char);
+            }
+        }
+
+        // remove ANSI codes/sequences (terminal colors)
+        $message = (string)$message;
+        $message = preg_replace('#\\x1b[[][^A-Za-z]*[A-Za-z]#', '', $message);
+        
+        return $message;
+    }
 }

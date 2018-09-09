@@ -1,6 +1,29 @@
 <?php echo $this->renderTabs($this->tabs) ?>
 <?php echo $this->renderSmallTools($this->tools) ?>
 
+<?php if ($this->serviceActive): ?>
+    <strong>Status and Details</strong>
+    <div class="form-row">
+        <div class="field-name">Service Status</div>
+        <div class="field-value"><strong style="color: red">inactive / dead</strong></div>
+    </div>
+    <div class="form-row">
+        <div class="field-name">Service File Name</div>
+        <div class="field-value"><?php echo $this->serviceFileName ?></div>
+    </div>
+    <div class="form-row">
+        <div class="field-name">Service Exec User</div>
+        <div class="field-value"><?php echo $this->serviceUser ?></div>
+    </div>
+    <div class="form-row">
+        <div class="field-name">Working Directory</div>
+        <div class="field-value"><?php echo $this->serviceWorkingDirectory ?></div>
+    </div>
+    <br/>
+    <br/>
+<?php endif; ?>
+
+<strong>Configuration</strong>
 <?php echo $this->form ?>
 
 <?php if(!empty($this->serviceFileContent)): ?>

@@ -7,7 +7,7 @@ class Modules_Dotnetcore_Logs_List extends pm_View_List_Simple
             'pageable'             => false,
             'defaultItemsPerPage'  => 50,
             'defaultSortField'     => 'column-1',
-            'defaultSortDirection' => pm_View_List_Simple::SORT_DIR_UP,
+            // 'defaultSortDirection' => pm_View_List_Simple::SORT_DIR_DOWN,
             'searchable'           => false
         ]);
 
@@ -22,10 +22,16 @@ class Modules_Dotnetcore_Logs_List extends pm_View_List_Simple
         $data = [];
 
         foreach ($logs as $log) {
+            $type = self::getHumandReadableEventTypeText($log->type);
+            $typeAsHtml = self::getColorHtmlTextForEventType($log->type, $type);
+
+            $message = $log->message;
+            $messageAsHtml = self::getColorHtmlTextForEventType($log->type, $message);
+
             $data[] = [
                 'column-1' => self::getHumandReadableDateTimeText($log->timestamp),
-                'column-2' => self::getHumandReadableEventTypeText($log->type),
-                'column-3' => $log->message
+                'column-2' => $typeAsHtml,
+                'column-3' => $messageAsHtml
             ];
         }
 
@@ -49,7 +55,8 @@ class Modules_Dotnetcore_Logs_List extends pm_View_List_Simple
             'column-3' => [
                 'title'      => pm_Locale::lmsg('pageLogsListColumnMessage'),
                 'sortable'   => false,
-                'searchable' => false
+                'searchable' => false,
+                'noEscape'   => true
             ]
         ]);
     }
@@ -82,5 +89,29 @@ class Modules_Dotnetcore_Logs_List extends pm_View_List_Simple
      */
     private static function getHumandReadableDateTimeText($dateTime) {
         return date('Y-m-d H:i:s', $dateTime);
+    }
+
+    private static function getColorHtmlTextForEventType($type, $text) {
+        $color = self::getColorForEventType($type);
+        if ($color) {
+            return '<span style="color: ' . $color . '">' . $text . '</span>';
+        }
+
+        return $text;
+    }
+
+    private static function getColorForEventType($type) {
+        switch (strtolower($type)) {
+            case 'error':
+            case 'critical':
+            case 'alert':
+                return '#e24431';
+
+            case 'warning':
+                return '#e29e31';
+
+            default:
+                return null;
+        }
     }
 }

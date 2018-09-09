@@ -22,11 +22,11 @@ I am focused on a version, that runs with Plesk Onyx installed on Debian and i a
 
 - [ ] Manual Service restart using systemd (Tool button in the "General" tab)
 
-- [ ] Persist form values (settings) under the "General" tab using [pm_Settings](https://plesk.github.io/pm-api-stubs/docs/classes/pm_Settings.html)
+- [X] Persist form values (settings) under the "General" tab using [pm_Settings](https://plesk.github.io/pm-api-stubs/docs/classes/pm_Settings.html)
 
 - [ ] Add support for systemd / services by writing/overwriting service files under ```/etc/systemd/system``` (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#create-the-service-file))
 
-- [ ] Add support for reading the last log entries from the application using journalctrl (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#viewing-logs))
+- [X] Add support for reading the last log entries from the application using journalctrl (see [Microsoft Docs](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-2.1&tabs=aspnetcore2x#viewing-logs))
 
 
 
@@ -47,6 +47,24 @@ If your plesk installation is located at ```/opt/psa``` you have to upload the f
 | Path in Repository | Path on your server                             |
 |--------------------|-------------------------------------------------|
 | /htdocs/*          | /opt/psa/admin/htdocs/modules/dotnetcore        |
-| /_meta/*           | /opt/psa/admin/share/modules/dotnetcore/_meta   |
 | /plib/*            | /opt/psa/admin/plib/modules/dotnetcore          |
+| /sbin/*            | /opt/psa/admin/sbin/modules/dotnetcore          |
 | /meta.xml          | /opt/psa/admin/plib/modules/dotnetcore/meta.xml |
+| /_meta/*           | /opt/psa/admin/share/modules/dotnetcore/_meta   |
+
+Finally some permissions must be set and a symlink has to be created for the binaries:
+
+```bash
+# make read-service-log executable
+chmod +x /opt/psa/admin/sbin/modules/dotnetcore/read-service-log
+
+# navigate to the modules folder for binaries
+cd /opt/psa/admin/bin/modules;
+
+# create extension module folder
+mkdir dotnetcore;
+cd dotnetcore;
+
+# symlink extension binaries
+ln -s ../../../sbin/mod_wrapper read-service-log
+```
