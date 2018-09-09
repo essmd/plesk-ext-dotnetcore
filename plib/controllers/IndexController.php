@@ -35,8 +35,6 @@ class IndexController extends pm_Controller_Action
         $this->view->serviceFileContent = $serviceFileContent;
         $this->view->serviceWorkingDirectory = $service->getWorkingDirectory();
 
-        $this->view->serviceFileName = pm_Context::getActionUrl('log', 'index', [ 'params' => [ 'dom_id' => 17 ] ]);
-
         // create settings form and handle POST request
         $form = new Modules_Dotnetcore_Settings_Form($service);
         $request = $this->getRequest();
